@@ -1,0 +1,111 @@
+
+server:
+  port: 7779
+spring:
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  application:
+    name: ace-jszw
+  datasource:
+    druid:
+      stat-view-servlet:
+        login-username: test
+        login-password: test
+
+    dynamic:
+      druid:
+        filters: stat
+        maxActive: 20
+        initialSize: 1
+        maxWait: 60000
+        minIdle: 1
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x' from dual
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxOpenPreparedStatements: 20
+      datasource:
+        admin:
+          url: jdbc:mysql://localhost:3306/ag_admin?useUnicode=true&characterEncoding=UTF8&useSSL=true
+          username: root
+          password: bian1991
+          driver-class-name: com.mysql.jdbc.Driver
+          druid: #这里可以重写默认值
+            initial-size: 6
+        auth:
+          url: jdbc:mysql://localhost:3306/ag_auth?useUnicode=true&characterEncoding=UTF8&useSSL=true
+          username: root
+          password: bian1991
+          driver-class-name: com.mysql.jdbc.Driver
+          druid:
+            initial-size: 6
+      primary: admin
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+
+jwt:  #jwt生成相关秘钥
+  token-header: Authorization
+  expire: 3600
+  rsa-secret: xx1WET12^%3^(WE45
+  user-service: ace-admin
+
+url:
+  ignore: /jwt/**,/swagger-resources/**  # 暂时将swagger解开限制
+
+auth:
+  serviceId: ace-auth
+  user:
+    token-header: Authorization
+    limit-expire: 1440 # 一天过去,单位分钟
+
+redis:
+  aec-key: xx288&^^%$!@#4dc  #用于redis key的加解密操作 防止共秘钥被破解
+  aec-iv: 0123456789abcdef
+  pool:
+    maxActive: 300
+    maxIdle: 100
+    maxWait: 1000
+  host: 127.0.0.1
+  port: 6379
+  password:
+  timeout: 2000
+  sysName: ace-pubserver
+  enable: true
+  database: 0
+# 配置数据库
+mybatis:
+  mapper-locations: "classpath*:mapper/*.xml"
+# 配置swagger
+swagger:
+  enabled: true
+  base-package: com.ztgeo.general
+  title: wh-admin
+  version: 1.0.0.SNAPSHOT
+  description: 中天基础框架
+  contact:
+    name: wei
+
+#jasypt:
+#  encryptor:
+#    password: BdaObXaELAA
+
+logging:
+  level:
+    com.ztgeo.general: debug
+
+# 跨服务数据合并 用于允许 字段的获取方式
+merge:
+  enabled: true
+  guavaCacheNumMaxSize: 1000
+  guavaCacheRefreshWriteTime: 10 # min
+  guavaCacheRefreshThreadPoolSize: 10
+  aop:
+    enabled: true
+
+mapper:
+  mappers: com.github.wxiaoqi.security.common.mapper.CommonMapper
